@@ -44,7 +44,229 @@ select lengthb('korea') from dual;
 select lengthb('한국') from dual;
 
 create table user1(data varchar2(5));
-
+alter table user1 modify data varchar2(6);
 select * from user1;
 insert into user1 values('south korea');
 insert into user1 values('한국');
+
+-- 특정범위의 문자를 추출해 주는 함수
+-- substr(문자, 시작위치, 길이)
+select substr('oracle test',2,2) from dual;
+select substr('oracle test',-2,2) from dual;
+select substr('오라클 테스트',2,4) from dual;
+
+-- 특정문자의 인덱스를 추출해 주는 함수 
+select instr('korea','kor') from dual;
+select instr('한국자바','자바') from dual;
+
+-- 주어진 문자열에서 왼쪽으로 특정문자를 채우는 함수
+select lpad('korea', 8, '*') from dual;
+select rpad('korea', 8, '*') from dual;
+
+-- 주어진 문자열에서 특정문자 삭제
+select ltrim('***korea**','*') from dual;
+select rtrim('***korea**','*') from dual;
+select trim('*' from '***korea**') from dual;
+
+-- 주어진 문자열에서 왼쪽 공백제거
+select '    korea' , length('    korea'), ltrim('    korea'), length(ltrim('    korea')) from dual; 
+
+--주어진 문자열에서 오른쪽의 공백제거
+SELECT 'korea   ', length('korea   '), rtrim('korea   '), length(rtrim('korea   ')) FROM dual;
+
+--주어진 문자열에서 양쪽의 공백제거
+SELECT  trim(' ' from '  korea   ' ), length(trim(' ' from '  korea   ' )) FROM dual;
+
+-- 주어진 문자의 아스키 코드값을 구하는 함수
+select ascii('A'), ascii('a'), ascii('0') from dual;
+
+-- 주어진 아스키 코드값의 문자를 구하는 함수
+select chr(65), chr(97), chr(48) from dual;
+
+-- 주어진 문자를 연결하는 함수
+select concat('java','jsp') from dual;
+
+/*----------------------------
+ 숫자함수
+-------------------------------*/
+--3.55을 소수점 1의 자리까지 구하시오(반올림)
+SELECT round(3.55, 1)
+FROM dual;
+
+SELECT round(42523.55, -1)
+FROM dual;
+
+SELECT round(42523.55, 0)
+FROM dual;
+
+--256.78을 무조건 올림한다.(올림)
+SELECT ceil(256.78)
+FROM dual;
+
+--289.78에서 소수이하는 무조건 버린다.(버림)
+SELECT floor(289.78)
+FROM dual;
+
+--2의 3승 (거듭제곱)
+SELECT power(2,3)
+FROM dual;
+
+--25의 제곱근
+SELECT sqrt(25)
+FROM dual;
+
+--나머지
+SELECT mod(10,3)
+FROM dual;
+
+/*-------------------------------
+ 날짜함수
+-------------------------------*/
+--현재 시스템에서 제공해주는 오늘의 날짜 구하는 함수
+SELECT sysdate FROM dual;
+
+
+SELECT sysdate + 1 FROM dual;
+
+-- 첫번째 인자의 달에 두번째 인자값을 더한 날짜를 반환
+SELECT add_months(sysdate, 10) FROM dual;
+
+
+/*==============================================
+ 변환형 함수
+   숫자                문자            날짜
+ to_number()  <-> to_char( ) <-> to_date( )
+==============================================*/
+--1 숫자->문자
+--첫번째 인자값을 두번째 인자값의 형식으로 변환해주는 함수
+SELECT to_char(2532, '999,999.99') FROM dual;
+
+SELECT to_char(2532, '000,000.00') FROM dual;
+
+--각 나라의 통화를 표현해 줄 때 L기호를 사용한다.
+SELECT to_char(253212,'L999,999.99') FROM dual;
+
+--2. 날짜 -> 문자
+SELECT to_char(sysdate, 'yyyy-mm-dd hh:mi:ss day')  /* 12시간  */ 
+FROM dual;
+
+SELECT to_char(sysdate, 'yyyy-mm-dd hh:mi:ss dy') FROM dual;
+
+SELECT to_char(sysdate, 'yyyy-mm-dd hh24:mi:ss day')  /* 24?ð?  */ 
+FROM dual;
+
+/*===============================
+to_number( )
+문자->숫자
+==================================*/
+SELECT '253' || '12' FROM dual;  --25312
+
+SELECT concat('253','12') FROM dual;  --25312
+
+SELECT '253' + '12' FROM dual;   --265
+
+SELECT to_number('253') + to_number('12') FROM dual;   --265
+
+/*===============================
+to_date()
+ 문자->날짜
+=================================*/
+SELECT to_date('2013-10-14') FROM dual;
+
+---------------------------------------------------------
+select first_name || '님은 ' || to_char(hire_date,'yyyy') || '년 ' || 
+        ltrim(to_char(hire_date,'mm'),0) || '월 ' || ltrim(to_char(hire_date,'dd'),0) || '일에 입사했습니다.' AS "결과"
+from employees ;
+
+/*====================================================================
+일반함수
+nvl(컬럼, 대체값) : 첫번째 인자값이 null이면 대체값 으로 대체해서 출력한다.
+nvl2(컬럼, 대체1, 대체2) : 컬럼의 값이 null아니면 대체1로, null이면 대체2로 출력한다. 
+nullif(표현식1, 표현식2 ) : 표현식1과 표현식2가 같으면 NULL, 다르면 표현식1로 출력한다.
+
+--대체할 값이 숫자이면 두번째 인자값에 숫자를 지정한다.
+--대체할 값이 문자이면 두번째 인자값에 문자를 지정한다.
+--대체할 값이 날짜이면 두번째 인자값에 날짜를 지정한다. 
+=======================================================================*/
+
+select commission_pct , nvl(commission_pct,0) 
+from employees;
+
+select first_name, manager_id, nvl(to_char(manager_id),'CEO') 
+from employees ;
+
+select commission_pct , nvl2(commission_pct,1,0) 
+from employees;
+
+select commission_pct, nullif( commission_pct, 0.4) 
+from employees
+where commission_pct in (0.4,0.3);
+
+/*======================================================
+decode(컬럼,값1, 처리1, 값2, 처리2,  그밖의 처리)
+java의 switch_case문과 비슷 
+======================================================*/
+select first_name, department_id,
+        decode(department_id, 10, 'ACCOUNTINT',
+                                20,'RESEARCH',
+                                30,'SALES',
+                                40,'OPERATIONS','OTHERS')
+from employees 
+order by department_id;
+
+
+--직급이 'PR_REP' 인 사원은 5%, 'SA_MAN'인 사원은 10%, 
+--'AC_MGR'인 사원은 15%, 'PU_CLERK' 인 사원은 20% 를 인상 
+select job_id, salary, decode(job_id, 'PR_REP', salary * 1.05,
+                                        'SA_MAN', salary * 1.1,
+                                        'AC_MGR', salary * 1.15,
+                                        'PU_CLERK', salary * 1.2, salary) AS newSal
+from employees ;
+
+/*================================
+case when 조건1 then 결과1
+     when 조건2 then 결과2
+     when 조건3 then 결과3
+     else 결과n
+end AS alias;
+자바에서 if-else와 비슷한 의미
+==================================*/
+
+--입사일에서 월이 1-3이면 '1사분기', 4-6이면 '2사분기', 
+--             7-9이면 '3사분기', 10-12이면 '4사분기'
+--로 처리를 하고 사원명(first_name), 
+--입사일(hire_date), 분기로 출력하시오.
+select first_name, hire_date,
+    case when to_char(hire_date,'mm') <= 3 then '1사분기'
+        when to_char(hire_date,'mm') <= 6 then '2사분기'
+        when to_char(hire_date,'mm') <= 9 then '3사분기'
+        when to_char(hire_date,'mm') <= 12 then '4사분기'
+     end as qq   
+from employees;
+
+/*=================================================
+집계함수(Aggregate Function), 그룹함수(Group Function)
+===================================================*/
+select max(salary) from employees;
+select count(salary) from employees;
+select count(commission_pct) from employees;
+select count(*) from employees;
+select sum(salary) from employees;
+select round(avg(salary),2) from employees;
+
+--집계함수와 단순컬럼은 함께 사용 할 수 없다.(출력되는 레코드수가 다르기 때문이다)
+--ORA-00937: not a single-group group function
+--ORA-00937: 단일 그룹의 그룹 함수가 아닙니다
+SELECT first_name, count(*)
+FROM employees;
+
+select department_id , count(*)
+from employees 
+group by department_id 
+order by department_id ;
+
+
+
+
+
+
