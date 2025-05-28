@@ -629,3 +629,6 @@ from employees e
 where exists (select 1 from employees where manager_id = e.employee_id)
 order by employee_id;
 
+select *
+from emp01;
+

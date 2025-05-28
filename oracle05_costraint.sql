@@ -12,3 +12,13 @@ number(m)-정수저장
 number(m,n)- 실수저장
 date - 날짜 저장
 ===============================*/
+CREATE TABLE student(
+  name varchar2(20), --바이트(영문,특수문자- 1byte / 한글-3byte)
+  age number(3),   --자릿수
+  avg number(5,2), --5는 전체자릿수, 2은 소수점 자릿수
+  hire date  
+);
+
+insert into student(name, age,avg, hire) values('홍길동',30, 297.8512, sysdate);
+
+select * from student;
