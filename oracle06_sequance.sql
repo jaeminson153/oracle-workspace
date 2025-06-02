@@ -48,3 +48,8 @@ select * from mem;
 insert into mem
 values (mem_num_seq.nextval, '고수',30,'서울');
 
+select *
+from departments a ;
+
+select * from departments where department_name like '%IT%';
+
